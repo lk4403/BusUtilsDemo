@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BusUtils
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class TabFragment : Fragment() {
     private lateinit var mItemContainer: LinearLayoutCompat
@@ -25,17 +27,16 @@ class TabFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        BusUtils.register(this)
+        EventBus.getDefault().register(this)
     }
 
     override fun onDestroyView() {
-        BusUtils.unregister(this)
+        EventBus.getDefault().unregister(this)
         super.onDestroyView()
     }
 
-    @BusUtils.Bus(
-        tag = TAG,
-        threadMode = BusUtils.ThreadMode.MAIN,
+    @Subscribe(
+        threadMode = ThreadMode.MAIN,
         sticky = true
     )
     fun onEvent(event: String) {

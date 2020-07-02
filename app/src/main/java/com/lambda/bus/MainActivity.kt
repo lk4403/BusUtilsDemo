@@ -5,8 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BusUtils
 import com.blankj.utilcode.util.FragmentUtils
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mItemContainer: LinearLayoutCompat
@@ -46,17 +48,16 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.b1).performClick()
 
-        BusUtils.register(this)
+        EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {
-        BusUtils.unregister(this)
+        EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
 
-    @BusUtils.Bus(
-        tag = TAG,
-        threadMode = BusUtils.ThreadMode.MAIN,
+    @Subscribe(
+        threadMode = ThreadMode.MAIN,
         sticky = true
     )
     fun onEvent(event: String) {
